@@ -9,6 +9,10 @@ def signup():
     else:
         username = request.form["username"]
         password = request.form["password"]
+        f = open("login.txt", "w")
+        f.write(username + "\n")
+        f.write(password)
+        f.close()
         return "Sign up success"
 
 @app.route("/", methods=["GET","POST"])
@@ -16,8 +20,11 @@ def login():
     if request.method == "GET":
         return render_template("index.html")
     else:
-        if "bob" == request.form["username"] and \
-           "123" == request.form["password"]:
-           return "Hello " + "bob"
+        f = open("login.txt", "r")
+        username = f.readline().strip()
+        password = f.readline()
+        if username == request.form["username"] and \
+           password == request.form["password"]:
+           return "Hello " + username
         else:
             return "login failed"
