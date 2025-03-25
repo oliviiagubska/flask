@@ -46,7 +46,24 @@ def login():
             return render_template("welcome.html")
         else:
             return "login failed"
-           
+
+@app.route("/password", methods=["GET", "POST"])
+def password():
+    if request.method == "GET":
+        if "username" in session:
+            return render_template("password.html")
+        else:
+            return render_template("index.html")
+    else:
+        con = sqlite3.connect("login.db")
+        cur = con.cursor()
+        hash = hashlib.sha256(request.form["password"].encode()).hexdigest()
+        cur.execute(""" UPDATE users SET password=? WHERE username=?""",
+                    (hash, session["username"]))
+        con.commit()
+        con.close()
+        return "password updated successfully"
+    
 @app.route("/w")
 def welcome():
     return render_template("welcome.html")
