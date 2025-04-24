@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Welcome</title>
+  <title>Login Failed</title>
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500;700&display=swap" rel="stylesheet">
   <style>
     body {
@@ -20,39 +20,35 @@
     }
 
     h1 {
+      color: #ff6b6b;
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+
+    p {
       color: #d2b9ff;
-      font-size: 42px;
       margin-bottom: 30px;
     }
 
-    .btn {
+    a {
       padding: 12px 24px;
-      margin: 10px;
-      background-color: #5d3fd3;
+      background-color: #4CAF50;
       color: white;
       border: none;
       border-radius: 6px;
       font-size: 16px;
-      cursor: pointer;
       text-decoration: none;
       transition: background-color 0.3s ease;
     }
 
-    .btn:hover {
-      background-color: #7a5bed;
-    }
-
-    .button-container {
-      display: flex;
-      gap: 20px;
+    a:hover {
+      background-color: #45a049;
     }
   </style>
 </head>
 <body>
-  <h1>Welcome, {{ session['username'] }}!</h1>
-  <div class="button-container">
-    <a href="/create_team" class="btn">Create a Team</a>
-    <a href="/join_team" class="btn">Join a Team</a>
-  </div>
+  <h1>❌ Login Failed</h1>
+  <p>Incorrect username or password. Please try again.</p>
+  <a href="/login">Back to Login</a>
 </body>
 </html>
