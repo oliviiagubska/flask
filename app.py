@@ -29,11 +29,11 @@ def signup():
         username = request.form["username"]
         password = request.form["password"]
 
-        # Check password strength
+        # ccheck password strength
         if len(password) < 6 or not re.search(r"[A-Za-z]", password) or not re.search(r"[0-9]", password):
             return render_template("signup.html", error="Password must be at least 6 characters and include both letters and numbers.")
 
-        # Check if username exists
+        #Check if username exists
         con = sqlite3.connect("login.db")
         cur = con.cursor()
         cur.execute("SELECT * FROM users WHERE username = ?", (username,))
@@ -42,7 +42,7 @@ def signup():
             con.close()
             return render_template("signup.html", error="Username already taken. Please choose another.")
 
-        # All good – hash and store
+        
         hash = hashlib.sha256(password.encode()).hexdigest()
         cur.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, hash))
         con.commit()
@@ -101,16 +101,23 @@ def create_team():
         invites_raw = request.form["invites"]
 
         invites = [email.strip() for email in invites_raw.splitlines() if email.strip()]
+        owner = session["username"]
 
-        # You can now:
-        # - Save team to database
-        # - Generate team code
-        # - Send emails (optional, not required now)
+        con = sqlite3.connect("login.db")
+        cur = con.cursor()
 
-        print("Team created:", team_name)
-        print("Invited:", invites)
+        #Insert new team
+        cur.execute("INSERT INTO teams (name, owner) VALUES (?, ?)", (team_name, owner))
+        team_id = cur.lastrowid  #get the ID of the new team
 
-        return redirect("/w")  # back to dashboard or confirmation page
+        #Insert invited members
+        for email in invites:
+            cur.execute("INSERT INTO team_members (team_id, email) VALUES (?, ?)", (team_id, email))
+
+        con.commit()
+        con.close()
+
+        return redirect("/w") 
 
     return render_template("create_team.html")
 
